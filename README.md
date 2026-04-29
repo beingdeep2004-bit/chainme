@@ -1,148 +1,193 @@
-⛓️ ChainMe — Spell Your Name in Crypto
-=====================================
+⛓️ ChainMe — Crypto Portfolio Generator
+==========================================
 
-Transform your name into an iconic chain of cryptocurrency symbols with ChainMe, a vibrant single-page web app for the crypto-curious.
+A beautifully minimal, Apple GlassOS-inspired crypto portfolio builder. Create stunning shareable portfolio cards with your favorite crypto assets.
 
-## Description
+## Overview
 
-ChainMe is a fun, interactive web app that converts each letter of your name into a unique cryptocurrency symbol. Watch as 26 crypto symbols burst across your screen in a mesmerizing opening animation, then generate personalized crypto cards for your name. Download a high-quality image, share it on social media, and celebrate your inner blockchain enthusiast.
+ChainMe is a elegant single-page web app designed with Apple's GlassOS aesthetic. Create a portfolio of crypto assets (Bitcoin, Solana, Ethereum, Polymarket, Kalshi, MegaETH, FTX) with smooth animations, beautiful cards, and downloadable images.
+
+**Live Demo:** https://chainme.vercel.app
 
 ## Features
 
-✨ **Opening Animation** — All 26 crypto symbols burst from the center in a spectacular spiral, scatter across the background, and continuously drift with gentle floating motion.
+✨ **Opening Animation**
+- All 7 crypto logos burst outward from a glowing center in perfect synchronization
+- Logos float continuously in the background with subtle drift motion
+- Ultra-clean, minimalist presentation with low opacity
 
-🎴 **Flip Card Reveal** — Input your name and watch as letter cards flip one by one, each revealing a unique crypto symbol, ticker, and project name with satisfying 3D animations and tick sounds.
+🎴 **Apple GlassOS Design**
+- Frosted glass panels with backdrop blur
+- Soft colors: cool blues, whites, and grays
+- San Francisco font system for Apple-native typography
+- Subtle shadows and smooth transitions throughout
 
-📥 **Download Your Chain** — Generate a beautiful, shareable PNG image of your name in crypto with watermarks, grid background, and professional styling. Perfect for profile pictures or sharing.
+🚀 **Portfolio Generation**
+- Enter a portfolio name and select crypto assets
+- Black cards flip one-by-one with satisfying 3D animations
+- Each card reveals the official crypto logo and name
+- Procedural tick sounds on each flip (Web Audio API)
 
-🔗 **Share Instantly** — Tweet your creation directly to Twitter/X or copy a shareable link to send to friends.
+📥 **GlassOS-Styled Download**
+- Generate professional portfolio image
+- Apple GlassOS aesthetic with gradient background
+- Original crypto logos with official colors
+- Perfect for sharing and profile pictures
 
-📖 **Alphabet Reference** — Explore the complete 26-letter crypto alphabet with an expandable reference legend showing each symbol's ticker and project name.
+🔗 **Sharing & Social**
+- One-click Twitter/X share with pre-filled message
+- Copy shareable portfolio link
+- URL parameter support for sharing portfolios
 
-🎆 **Confetti Celebration** — Burst confetti in crypto colors when your name is fully revealed.
+🎆 **Polish & Details**
+- Confetti burst on portfolio reveal
+- Smooth animations throughout
+- Mobile-responsive design
+- System font stack for native appearance
 
 ## How to Use
 
-1. **Open** — Simply open `index.html` directly in your web browser. No server or installation required.
-2. **Enter Your Name** — Type your name (or any text with letters A-Z) in the input field.
-3. **Generate** — Click the "Generate ⚡" button or press Enter to see your name transformed into crypto symbols.
-4. **Download** — Click "Download Your Chain" to save a PNG image of your creation.
-5. **Share** — Tweet it, copy the link, or regenerate to try another name.
+1. **Open** — Visit https://chainme.vercel.app in any modern browser
+2. **Enter Portfolio Name** — Type a name (e.g., "My Web3 Stack")
+3. **Create** — Click the Create button or press Enter
+4. **Watch** — See your portfolio cards flip with smooth animations
+5. **Download** — Save a beautiful portfolio image
+6. **Share** — Share on Twitter or copy the link
 
 ## Tech Stack
 
 - **HTML5** — Semantic markup
-- **CSS3** — Glassmorphism design, 3D transforms, keyframe animations
-- **Vanilla JavaScript** — No frameworks or build tools
+- **CSS3** — GlassOS design, 3D transforms, backdrop blur
+- **Vanilla JavaScript** — No frameworks, no dependencies
 - **Canvas API** — Image generation and download
-- **Web Audio API** — Procedurally generated tick sounds
-- **Google Fonts** — Orbitron (headings) and Space Grotesk (body)
+- **Web Audio API** — Procedural tick sound generation
+- **System Fonts** — Apple San Francisco, Outfit from Google Fonts
 
-### Key Technologies Used
+### Key Technologies
 
 | Technology | Purpose |
 |------------|---------|
-| CSS `transform-style: preserve-3d` | 3D flip card effect |
-| CSS `backdrop-filter: blur()` | Glassmorphism panel styling |
-| Canvas 2D Context | PNG image generation |
-| Web Audio API | Procedural tick sound synthesis |
+| CSS `backdrop-filter: blur()` | GlassOS frosted glass effect |
+| CSS `transform-style: preserve-3d` | 3D card flip animations |
+| Canvas 2D Context | Portfolio image rendering |
+| Web Audio API | Procedural audio synthesis |
 | CSS Keyframes | Burst, float, and shimmer animations |
-| Web Animations API | Confetti particle effects |
 
 ## Design System
 
-- **Background** — Near-black (`#0a0a0f`) with subtle animated grid
-- **Primary Accent** — Bitcoin orange (`#F7931A`)
-- **Secondary Accent** — Ethereum purple-blue (`#627EEA`)
-- **Typography** — Orbitron for crypto-style headings, Space Grotesk for body text
-- **Panel Style** — Glassmorphism with frosted glass effect, 20px blur, semi-transparent border
+**Colors:**
+- Background: Linear gradient from `#ffffff` → `#ececf1`
+- Primary Blue: `#0066cc` → `#0052a3`
+- Success Green: `#34c759` → `#2db84c`
+- Text: `#1d1d1f` (Apple system black)
+- Subtle: `rgba(0, 0, 0, 0.06)` (glass transparency)
 
-## Crypto Alphabet
+**Typography:**
+- Headings: System San Francisco, 700 weight
+- Body: -apple-system, BlinkMacSystemFont, Outfit
+- Letter-spacing: -0.5px (tight kerning)
 
-Each letter (A–Z) maps to a cryptocurrency:
+**Components:**
+- Panels: `rgba(255, 255, 255, 0.7)` with `backdrop-filter: blur(40px)`
+- Borders: `1px solid rgba(0, 0, 0, 0.08)`
+- Shadows: `0 20px 60px rgba(0, 0, 0, 0.06)` (subtle depth)
+- Border Radius: 28px (large, rounded corners)
 
-| Letter | Symbol | Ticker | Project | Color |
-|--------|--------|--------|---------|-------|
-| A | 🔷 | ADA | Cardano | `#0033AD` |
-| B | ₿ | BTC | Bitcoin | `#F7931A` |
-| C | 🔵 | CRO | Cronos | `#002D74` |
-| D | Ð | DOGE | Dogecoin | `#C2A633` |
-| E | Ξ | ETH | Ethereum | `#627EEA` |
-| ... | ... | ... | ... | ... |
-| Z | ⓩ | ZEC | Zcash | `#F4B728` |
+## Supported Crypto Assets
 
-See the full alphabet by clicking the "📖 Alphabet" button in the bottom left.
+- **₿** Bitcoin (`#F7931A`)
+- **◎** Solana (`#14F195`)
+- **Ξ** Ethereum (`#627EEA`)
+- **⬟** Polymarket (`#5294E2`)
+- **◆** Kalshi (`#1E90FF`)
+- **✦** MegaETH (`#6366F1`)
+- **❌** FTX (`#E74C3C`) — with red strikethrough
 
-## Features in Detail
+Use the first letters of each asset name to build your portfolio:
+- `B` for Bitcoin
+- `S` for Solana
+- `E` for Ethereum
+- `P` for Polymarket
+- `K` for Kalshi
+- `M` for MegaETH
+- `F` for FTX
 
-### Opening Animation
-On page load, all 26 crypto symbols start clustered at the center of the screen and explode outward in a swirling spiral motion. Each symbol lands at a random position and begins an infinite gentle floating animation, creating an immersive background that never stops drifting.
+**Example:** Type `BSEP` to create a Bitcoin + Solana + Ethereum + Polymarket portfolio.
 
-### 3D Flip Card Animation
-When you generate your name, black cards appear instantly for each letter. They flip one by one (staggered 150ms apart) with a smooth 3D rotation, revealing the crypto symbol on the back along with the ticker, letter, and project name. A glow pulse runs across all cards after the reveal.
+## File Structure
 
-### Canvas Image Download
-Click "Download Your Chain" to generate a professional PNG image featuring:
-- Dark background with radial gradient glow
-- All letter cards rendered side by side
-- ChainMe watermark (top-left)
-- chainme.app watermark (bottom-right)
-- Subtle grid background pattern
-- Filename: `chainme-[NAME].png`
+```
+chainme/
+├── index.html          (Complete app — HTML + CSS + JS)
+└── README.md           (This file)
+```
 
-### Mobile Responsive
-The entire app is optimized for desktop, tablet, and mobile devices. Cards scale responsively, and the UI panel adapts to smaller screens.
+No build process. No dependencies. No server. Just open `index.html` or visit the live demo.
 
-## Browser Compatibility
+## Browser Support
 
-Works in all modern browsers supporting:
-- CSS Grid & Flexbox
+Works in all modern browsers with support for:
+- CSS Backdrop Filter
 - CSS 3D Transforms
 - Canvas 2D API
 - Web Audio API
 - ES6 JavaScript
 
-Tested on:
-- ✅ Chrome/Chromium
-- ✅ Firefox
-- ✅ Safari
-- ✅ Edge
+**Tested on:**
+- ✅ Chrome/Chromium (latest)
+- ✅ Safari (latest)
+- ✅ Firefox (latest)
+- ✅ Edge (latest)
 
-## Files
+## Features in Detail
 
-```
-.
-├── index.html      (Complete single-page app — HTML + CSS + JS)
-└── README.md       (This file)
-```
+### Opening Animation
+On page load, all 7 crypto logos burst outward from the center of the screen in a smooth spiral motion. Each logo lands at a random position and then floats continuously with gentle up-and-down drift, creating an immersive, living background.
 
-No build process, no dependencies, no server required. Just open `index.html` in your browser!
+### 3D Card Flip
+Enter a portfolio name and create it. Black cards appear instantly for each letter. They flip one-by-one (130ms stagger) with a smooth 3D CSS rotation, revealing official crypto logos and names. Each flip triggers a subtle procedurally-generated tick sound.
 
-## Screenshots
+### GlassOS Design
+Every element follows Apple's GlassOS design language:
+- Frosted glass panels with 40px backdrop blur
+- Minimal color palette (blues, whites, grays)
+- Soft shadows and subtle borders
+- Generous spacing and rounded corners
+- San Francisco font system
 
-_Add screenshots here after deploying:_
-- Opening animation with floating symbols
-- Input panel with "Chain My Name" prompt
-- Flip card reveal in progress
-- Completed name with download button
-- Downloaded PNG image example
+### Image Download
+Click "Download Portfolio" to render a professional image featuring:
+- Apple GlassOS gradient background
+- All portfolio cards side-by-side
+- Official crypto logos and colors
+- Subtle grid pattern
+- ChainMe watermark
+- Filename: `chainme-[PORTFOLIO].png`
 
-## Future Enhancements
+### Mobile Responsive
+Fully responsive design adapts beautifully to:
+- Desktop (optimized layout)
+- Tablet (adaptive spacing)
+- Mobile (single-column, scaled cards)
 
-- Leaderboard of popular names
-- Custom color themes
-- Animated GIF export
-- Sound effects toggle
-- Dark/light mode
-- Name history / saved chains
+## Roadmap
 
-## Built with ❤️ for the crypto community
+- [ ] Add more crypto assets (100+ altcoins)
+- [ ] Custom color themes
+- [ ] Export as SVG
+- [ ] Portfolio templates
+- [ ] Light/Dark mode toggle
+- [ ] Animated GIF export
+- [ ] Blockchain integration (store portfolios on-chain)
 
-Transform your identity. Embrace the blockchain. **Be ChainMe.**
+## Built with ❤️ for the Crypto Community
+
+A minimal, beautiful way to celebrate your crypto portfolio.
+
+**Transform your identity. Embrace Web3. ChainMe.**
 
 ---
 
-**License** — Open source and free to use.
+**License** — MIT. Open source and free to use.
 
-**Questions?** — Check out the code, fork it, and make it your own!
-# chainme
+**Questions?** Check the code, fork it, remix it. Make it your own.
