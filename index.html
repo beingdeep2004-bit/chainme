@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChainMe — Spell Your Name in Crypto</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    body {
+      background: #0a0a0f;
+      color: #ffffff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Background grid and gradient */
+    .background-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      background-image:
+        linear-gradient(0deg, transparent 24%, rgba(255, 153, 26, 0.02) 25%, rgba(255, 153, 26, 0.02) 26%, transparent 27%, transparent 74%, rgba(255, 153, 26, 0.02) 75%, rgba(255, 153, 26, 0.02) 76%, transparent 77%, transparent),
+        linear-gradient(90deg, transparent 24%, rgba(255, 153, 26, 0.02) 25%, rgba(255, 153, 26, 0.02) 26%, transparent 27%, transparent 74%, rgba(255, 153, 26, 0.02) 75%, rgba(255, 153, 26, 0.02) 76%, transparent 77%, transparent);
+      background-size: 60px 60px;
+      animation: drift 60s linear infinite;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(60px, 60px); }
+    }
+
+    /* Floating symbols container */
+    .floating-symbols {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .floating-symbol {
+      position: absolute;
+      font-size: 70px;
+      font-weight: bold;
+      opacity: 0.15;
+      text-shadow: 0 0 30px rgba(247, 147, 26, 0.3);
+      animation: float 8s ease-in-out infinite;
+      user-select: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+      50% { transform: translateY(-30px) rotateZ(5deg); }
+    }
+
+    @keyframes burst {
+      0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) scale(1);
+        opacity: 0.15;
+      }
+    }
+
+    .floating-symbol.burst-animation {
+      animation: burst 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .floating-symbol:hover {
+      opacity: 0.35;
+      filter: drop-shadow(0 0 20px rgba(247, 147, 26, 0.6));
+    }
+
+    /* Main container */
+    .container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+    }
+
+    /* Glassmorphism panel */
+    .panel {
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 50px 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out 1.2s forwards;
+      transition: all 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3em;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 5px;
+      background: linear-gradient(135deg, #F7931A, #627EEA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 2px;
+    }
+
+    .panel .tagline {
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      color: #F7931A;
+      font-size: 0.9em;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .panel .subtext {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9em;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(247, 147, 26, 0.3);
+      border-radius: 10px;
+      color: #ffffff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: #F7931A;
+      box-shadow: 0 0 20px rgba(247, 147, 26, 0.2);
+    }
+
+    input[type="text"]::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .btn {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .btn-generate {
+      background: linear-gradient(135deg, #F7931A, #FFB84D);
+      color: #000;
+      min-width: 160px;
+      box-shadow: 0 4px 15px rgba(247, 147, 26, 0.4);
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(247, 147, 26, 0.6);
+    }
+
+    .btn-generate:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Cards container */
+    .cards-container {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      min-height: 140px;
+      align-items: center;
+    }
+
+    /* 3D Flip Card */
+    .card {
+      width: 80px;
+      height: 110px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transform-style: preserve-3d;
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    .card-front {
+      background: #1a1a1f;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      font-size: 2.5em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-front::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+      border-radius: 12px;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px;
+      text-align: center;
+      font-size: 0.7em;
+    }
+
+    .card-symbol {
+      font-size: 2.2em;
+      line-height: 1;
+    }
+
+    .card-ticker {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75em;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .card-letter {
+      font-size: 1.2em;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .card-name {
+      font-size: 0.6em;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    /* Glow pulse animation */
+    @keyframes glowPulse {
+      0%, 100% {
+        border-color: currentColor;
+        box-shadow: 0 0 10px currentColor;
+      }
+      50% {
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 20px rgba(247, 147, 26, 0.5);
+      }
+    }
+
+    .card.glow-pulse {
+      animation: glowPulse 0.6s ease-in-out;
+    }
+
+    /* Download button */
+    .download-section {
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 0.6s ease-out forwards;
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, #627EEA, #9F7AEA);
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(98, 126, 234, 0.6);
+    }
+
+    /* Share buttons */
+    .share-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .share-buttons .btn-secondary {
+      margin: 0;
+      width: auto;
+      min-width: 120px;
+      font-size: 0.8em;
+      padding: 10px 16px;
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Reference legend */
+    .reference-section {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 8;
+      max-width: 300px;
+    }
+
+    .reference-toggle {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #F7931A;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85em;
+      transition: all 0.3s ease;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .reference-toggle:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: #F7931A;
+    }
+
+    .reference-legend {
+      display: none;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(247, 147, 26, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.75em;
+    }
+
+    .reference-legend.open {
+      display: block;
+    }
+
+    .reference-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .reference-item:last-child {
+      border-bottom: none;
+    }
+
+    .reference-letter {
+      font-weight: 700;
+      color: #F7931A;
+    }
+
+    .reference-ticker {
+      color: rgba(255, 255, 255, 0.7);
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .panel {
+        padding: 35px 25px;
+      }
+
+      .panel h1 {
+        font-size: 2em;
+      }
+
+      .card {
+        width: 65px;
+        height: 95px;
+      }
+
+      .card-symbol {
+        font-size: 1.8em;
+      }
+
+      .reference-section {
+        bottom: 10px;
+        left: 10px;
+        max-width: calc(100vw - 20px);
+      }
+
+      .reference-legend {
+        max-height: 200px;
+        font-size: 0.7em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .panel {
+        padding: 25px 15px;
+      }
+
+      .panel h1 {
+        font-size: 1.5em;
+      }
+
+      .card {
+        width: 55px;
+        height: 85px;
+      }
+
+      .card-symbol {
+        font-size: 1.5em;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      .btn-generate {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-grid"></div>
+  <div class="floating-symbols"></div>
+
+  <div class="container">
+    <div class="panel">
+      <h1>ChainMe</h1>
+      <div class="tagline">Chain My Name</div>
+      <p class="subtext">Type your name — each letter becomes an iconic crypto symbol</p>
+
+      <div class="input-group">
+        <input type="text" id="nameInput" placeholder="Enter your name..." autocomplete="off">
+        <button class="btn btn-generate" id="generateBtn">Generate ⚡</button>
+      </div>
+
+      <div class="cards-container" id="cardsContainer"></div>
+
+      <div class="download-section" id="downloadSection">
+        <button class="btn btn-secondary btn-download" id="downloadBtn">
+          📥 Download Your Chain
+        </button>
+        <div class="share-buttons">
+          <button class="btn btn-secondary" id="shareTwitterBtn">𝕏 Tweet</button>
+          <button class="btn btn-secondary" id="shareCopyBtn">🔗 Copy Link</button>
+          <button class="btn btn-secondary" id="regenerateBtn">🔄 Generate New</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reference-section">
+    <button class="reference-toggle" id="referenceToggle">📖 Alphabet</button>
+    <div class="reference-legend" id="referenceLegend"></div>
+  </div>
+
+  <script>
+    // Crypto alphabet mapping
+    const CRYPTO_MAP = {
+      'A': { symbol: '🔷', ticker: 'ADA', name: 'Cardano', color: '#0033AD', unicode: '🔷' },
+      'B': { symbol: '₿', ticker: 'BTC', name: 'Bitcoin', color: '#F7931A', unicode: '₿' },
+      'C': { symbol: '🔵', ticker: 'CRO', name: 'Cronos', color: '#002D74', unicode: '🔵' },
+      'D': { symbol: 'Ð', ticker: 'DOGE', name: 'Dogecoin', color: '#C2A633', unicode: 'Ð' },
+      'E': { symbol: 'Ξ', ticker: 'ETH', name: 'Ethereum', color: '#627EEA', unicode: 'Ξ' },
+      'F': { symbol: '⨎', ticker: 'FIL', name: 'Filecoin', color: '#0090FF', unicode: '⨎' },
+      'G': { symbol: '📊', ticker: 'GRT', name: 'The Graph', color: '#6F4CBA', unicode: '📊' },
+      'H': { symbol: 'ℏ', ticker: 'HBAR', name: 'Hedera', color: '#00B388', unicode: 'ℏ' },
+      'I': { symbol: '∞', ticker: 'ICP', name: 'Internet Computer', color: '#29ABE2', unicode: '∞' },
+      'J': { symbol: '🪐', ticker: 'JUP', name: 'Jupiter', color: '#C4884C', unicode: '🪐' },
+      'K': { symbol: '⬡', ticker: 'KAS', name: 'Kaspa', color: '#49EACB', unicode: '⬡' },
+      'L': { symbol: 'Ł', ticker: 'LTC', name: 'Litecoin', color: '#BFBBBB', unicode: 'Ł' },
+      'M': { symbol: '◈', ticker: 'MKR', name: 'MakerDAO', color: '#1AAB9B', unicode: '◈' },
+      'N': { symbol: '🌿', ticker: 'NEO', name: 'NEO', color: '#58BF00', unicode: '🌿' },
+      'O': { symbol: '🔴', ticker: 'OP', name: 'Optimism', color: '#FF0420', unicode: '🔴' },
+      'P': { symbol: '⬟', ticker: 'POL', name: 'Polygon', color: '#8247E5', unicode: '⬟' },
+      'Q': { symbol: '◉', ticker: 'QTUM', name: 'Qtum', color: '#2895D8', unicode: '◉' },
+      'R': { symbol: '🎨', ticker: 'RENDER', name: 'Render Network', color: '#FF4500', unicode: '🎨' },
+      'S': { symbol: '◎', ticker: 'SOL', name: 'Solana', color: '#9945FF', unicode: '◎' },
+      'T': { symbol: '♦', ticker: 'TRX', name: 'TRON', color: '#FF0013', unicode: '♦' },
+      'U': { symbol: '🦄', ticker: 'UNI', name: 'Uniswap', color: '#FF007A', unicode: '🦄' },
+      'V': { symbol: '✦', ticker: 'VET', name: 'VeChain', color: '#15BDFF', unicode: '✦' },
+      'W': { symbol: '🌍', ticker: 'WLD', name: 'Worldcoin', color: '#888888', unicode: '🌍' },
+      'X': { symbol: '✕', ticker: 'XRP', name: 'Ripple', color: '#00AAE4', unicode: '✕' },
+      'Y': { symbol: '💙', ticker: 'YFI', name: 'Yearn Finance', color: '#006AE3', unicode: '💙' },
+      'Z': { symbol: 'ⓩ', ticker: 'ZEC', name: 'Zcash', color: '#F4B728', unicode: 'ⓩ' }
+    };
+
+    // Initialize floating symbols
+    function initializeFloatingSymbols() {
+      const container = document.querySelector('.floating-symbols');
+      const symbols = Object.keys(CRYPTO_MAP);
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+
+      symbols.forEach((letter, index) => {
+        const crypto = CRYPTO_MAP[letter];
+        const symbol = document.createElement('div');
+        symbol.className = 'floating-symbol burst-animation';
+        symbol.textContent = crypto.symbol;
+        symbol.style.left = centerX + 'px';
+        symbol.style.top = centerY + 'px';
+
+        // Calculate random position on screen
+        const angle = (index / symbols.length) * Math.PI * 2;
+        const distance = 200 + Math.random() * 300;
+        const tx = Math.cos(angle) * distance + (Math.random() - 0.5) * 100;
+        const ty = Math.sin(angle) * distance + (Math.random() - 0.5) * 100;
+
+        symbol.style.setProperty('--tx', tx + 'px');
+        symbol.style.setProperty('--ty', ty + 'px');
+
+        // Random animation delay for floating
+        const delay = Math.random() * 2;
+        symbol.style.animationDelay = delay + 's';
+
+        container.appendChild(symbol);
+      });
+    }
+
+    // Generate tick sound via Web Audio API
+    function playTickSound() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const now = audioContext.currentTime;
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(400, now + 0.1);
+
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+
+      osc.start(now);
+      osc.stop(now + 0.1);
+    }
+
+    // Create a card and flip it
+    function createAndFlipCard(letter, delayMs) {
+      const crypto = CRYPTO_MAP[letter.toUpperCase()];
+      if (!crypto) return;
+
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="card-front"></div>
+          <div class="card-back" style="border: 2px solid ${crypto.color}; color: ${crypto.color}">
+            <div class="card-symbol">${crypto.symbol}</div>
+            <div class="card-ticker">${crypto.ticker}</div>
+            <div class="card-letter">${letter.toUpperCase()}</div>
+            <div class="card-name">${crypto.name}</div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('cardsContainer').appendChild(card);
+
+      setTimeout(() => {
+        card.classList.add('flipped');
+        playTickSound();
+      }, delayMs);
+
+      return card;
+    }
+
+    // Generate confetti
+    function createConfetti() {
+      const container = document.body;
+      const confettiCount = 30;
+      const colors = Object.values(CRYPTO_MAP).map(c => c.color);
+
+      for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.top = '-10px';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = '50%';
+        confetti.style.opacity = '0.8';
+
+        container.appendChild(confetti);
+
+        const duration = 2 + Math.random() * 1;
+        const animation = confetti.animate([
+          {
+            transform: 'translateY(0) rotateZ(0deg)',
+            opacity: 1
+          },
+          {
+            transform: `translateY(${window.innerHeight + 20}px) rotateZ(${Math.random() * 360}deg)`,
+            opacity: 0
+          }
+        ], {
+          duration: duration * 1000,
+          easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        });
+
+        animation.onfinish = () => confetti.remove();
+      }
+    }
+
+    // Download image
+    function downloadImage(name) {
+      const letters = name.toUpperCase().split('');
+      const cardWidth = 100;
+      const cardHeight = 140;
+      const padding = 40;
+      const canvasWidth = Math.max(1200, letters.length * cardWidth + padding * 2);
+      const canvasHeight = 500;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      const ctx = canvas.getContext('2d');
+
+      // Background with gradient
+      const bgGradient = ctx.createRadialGradient(canvasWidth / 2, canvasHeight / 2, 0, canvasWidth / 2, canvasHeight / 2, canvasWidth);
+      bgGradient.addColorStop(0, '#1a1a2e');
+      bgGradient.addColorStop(1, '#0a0a0f');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Faint grid
+      ctx.strokeStyle = 'rgba(247, 147, 26, 0.05)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < canvasWidth; i += 40) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvasHeight);
+        ctx.stroke();
+      }
+      for (let i = 0; i < canvasHeight; i += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvasWidth, i);
+        ctx.stroke();
+      }
+
+      // Top-left watermark
+      ctx.font = 'bold 20px Orbitron';
+      ctx.fillStyle = 'rgba(247, 147, 26, 0.6)';
+      ctx.fillText('ChainMe', 20, 40);
+
+      // Draw cards
+      const startX = (canvasWidth - letters.length * cardWidth) / 2;
+      const startY = (canvasHeight - cardHeight) / 2;
+
+      letters.forEach((letter, index) => {
+        const crypto = CRYPTO_MAP[letter];
+        const x = startX + index * cardWidth;
+        const y = startY;
+
+        // Card background
+        ctx.fillStyle = '#1a1a1f';
+        ctx.strokeStyle = crypto.color;
+        ctx.lineWidth = 2;
+        ctx.fillRect(x + 5, y, cardWidth - 10, cardHeight);
+        ctx.strokeRect(x + 5, y, cardWidth - 10, cardHeight);
+
+        // Symbol
+        ctx.font = 'bold 50px Arial';
+        ctx.fillStyle = crypto.color;
+        ctx.textAlign = 'center';
+        ctx.fillText(crypto.symbol, x + cardWidth / 2, y + 45);
+
+        // Ticker
+        ctx.font = '600 14px Orbitron';
+        ctx.fillStyle = crypto.color;
+        ctx.fillText(crypto.ticker, x + cardWidth / 2, y + 75);
+
+        // Letter
+        ctx.font = 'bold 24px Arial';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(letter, x + cardWidth / 2, y + 105);
+
+        // Project name
+        ctx.font = '10px Space Grotesk';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.fillText(crypto.name, x + cardWidth / 2, y + 130);
+      });
+
+      // Bottom watermark
+      ctx.font = '12px Space Grotesk';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.textAlign = 'right';
+      ctx.fillText('chainme.app', canvasWidth - 20, canvasHeight - 15);
+
+      // Download
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = `chainme-${name.toUpperCase()}.png`;
+      link.click();
+    }
+
+    // Generate button handler
+    document.getElementById('generateBtn').addEventListener('click', function() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (!name || name.length === 0) {
+        alert('Please enter a name!');
+        return;
+      }
+
+      const container = document.getElementById('cardsContainer');
+      container.innerHTML = '';
+      document.getElementById('downloadSection').style.opacity = '0';
+      document.getElementById('downloadSection').style.pointerEvents = 'none';
+
+      const letters = name.toUpperCase().split('');
+      letters.forEach((letter, index) => {
+        if (CRYPTO_MAP[letter]) {
+          createAndFlipCard(letter, index * 150);
+        }
+      });
+
+      // Glow pulse after all cards flip
+      const lastFlipTime = (letters.length - 1) * 150 + 500;
+      setTimeout(() => {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.add('glow-pulse');
+          }, index * 60);
+        });
+
+        // Show download section
+        document.getElementById('downloadSection').style.opacity = '1';
+        document.getElementById('downloadSection').style.pointerEvents = 'auto';
+
+        // Confetti
+        createConfetti();
+      }, lastFlipTime);
+    });
+
+    // Enter key handler
+    document.getElementById('nameInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('generateBtn').click();
+      }
+    });
+
+    // Download button
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name) {
+        downloadImage(name);
+      }
+    });
+
+    // Share on Twitter
+    document.getElementById('shareTwitterBtn').addEventListener('click', function() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name) {
+        const text = encodeURIComponent(`My name in crypto is ${name}! 🪙 Try yours at chainme.app #Bitcoin #Crypto #Web3 #ChainMe`);
+        window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+      }
+    });
+
+    // Copy link
+    document.getElementById('shareCopyBtn').addEventListener('click', function() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name) {
+        const link = `${window.location.href}?name=${encodeURIComponent(name)}`;
+        navigator.clipboard.writeText(link).then(() => {
+          alert('Link copied to clipboard!');
+        });
+      }
+    });
+
+    // Regenerate button
+    document.getElementById('regenerateBtn').addEventListener('click', function() {
+      document.getElementById('cardsContainer').innerHTML = '';
+      document.getElementById('downloadSection').style.opacity = '0';
+      document.getElementById('downloadSection').style.pointerEvents = 'none';
+      document.getElementById('nameInput').focus();
+    });
+
+    // Reference legend
+    function initializeReferenceLegend() {
+      const legend = document.getElementById('referenceLegend');
+      const letters = Object.keys(CRYPTO_MAP).sort();
+
+      letters.forEach(letter => {
+        const crypto = CRYPTO_MAP[letter];
+        const item = document.createElement('div');
+        item.className = 'reference-item';
+        item.innerHTML = `
+          <span class="reference-letter">${letter}</span>
+          <span class="reference-ticker">${crypto.ticker} • ${crypto.name}</span>
+        `;
+        legend.appendChild(item);
+      });
+    }
+
+    document.getElementById('referenceToggle').addEventListener('click', function() {
+      document.getElementById('referenceLegend').classList.toggle('open');
+    });
+
+    // Load name from URL param
+    function loadNameFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const name = params.get('name');
+      if (name) {
+        document.getElementById('nameInput').value = name;
+        document.getElementById('generateBtn').click();
+      }
+    }
+
+    // Initialize
+    window.addEventListener('load', () => {
+      initializeFloatingSymbols();
+      initializeReferenceLegend();
+      loadNameFromURL();
+    });
+  </script>
+</body>
+</html>
