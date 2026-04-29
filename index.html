@@ -3,12 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChainMe — Crypto Portfolio Generator</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+  <title>ChainMe — Crypto Symbol Generator</title>
   <style>
     * {
       margin: 0;
@@ -19,32 +14,24 @@
     html, body {
       width: 100%;
       height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Outfit', sans-serif;
-      background: linear-gradient(135deg, #f5f5f7 0%, #e8e8ed 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
       overflow: hidden;
       position: relative;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Subtle animated background gradient */
+    /* Background */
     .bg-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #ffffff 0%, #f5f5f7 50%, #ececf1 100%);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
       z-index: 0;
-      animation: bgShift 15s ease-in-out infinite;
     }
 
-    @keyframes bgShift {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.02); }
-    }
-
-    /* Floating symbols - Apple GlassOS style */
+    /* Floating symbols */
     .floating-symbols {
       position: fixed;
       top: 0;
@@ -58,19 +45,13 @@
     .floating-symbol {
       position: absolute;
       opacity: 0;
-      filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.08));
-    }
-
-    .floating-symbol svg {
-      width: 100%;
-      height: 100%;
-      display: block;
+      filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1));
     }
 
     @keyframes burst {
       0% {
         transform: translate(0, 0) scale(0);
-        opacity: 0.9;
+        opacity: 0.5;
       }
       100% {
         transform: translate(var(--tx), var(--ty)) scale(1);
@@ -79,20 +60,20 @@
     }
 
     .floating-symbol.burst-animation {
-      animation: burst 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      animation: burst 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0px) translateZ(0); }
-      50% { transform: translateY(-25px) translateZ(0); }
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-30px); }
     }
 
     .floating-symbol.floating {
-      animation: float 6s ease-in-out infinite;
-      opacity: 0.06;
+      animation: float 7s ease-in-out infinite;
+      opacity: 0.05;
     }
 
-    /* GlassOS Panel */
+    /* Main panel */
     .container {
       position: fixed;
       top: 50%;
@@ -100,25 +81,25 @@
       transform: translate(-50%, -50%);
       z-index: 10;
       width: 100%;
-      max-width: 500px;
+      max-width: 520px;
       padding: 20px;
     }
 
     .panel {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(40px);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      border-radius: 28px;
-      padding: 50px 40px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+      background: rgba(30, 30, 30, 0.6);
+      backdrop-filter: blur(50px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 32px;
+      padding: 60px 45px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       opacity: 0;
-      animation: fadeInPanel 0.8s ease-out 1.4s forwards;
+      animation: fadeInPanel 0.8s ease-out 1.6s forwards;
     }
 
     @keyframes fadeInPanel {
       from {
         opacity: 0;
-        transform: translateY(15px);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
@@ -127,36 +108,36 @@
     }
 
     .panel h1 {
-      font-size: 2.2em;
+      font-size: 2.4em;
       font-weight: 700;
       text-align: center;
-      margin-bottom: 8px;
-      color: #1d1d1f;
-      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      color: #ffffff;
+      letter-spacing: -0.8px;
     }
 
     .panel .tagline {
       text-align: center;
-      color: #666;
+      color: #999;
       font-size: 0.95em;
-      margin-bottom: 24px;
+      margin-bottom: 28px;
       font-weight: 400;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
     }
 
     .input-group {
       display: flex;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 14px;
+      margin-bottom: 24px;
     }
 
     input[type="text"] {
       flex: 1;
-      padding: 12px 16px;
-      background: rgba(0, 0, 0, 0.03);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 12px;
-      color: #1d1d1f;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      color: #ffffff;
       font-family: inherit;
       font-size: 0.95em;
       transition: all 0.3s ease;
@@ -164,17 +145,17 @@
     }
 
     input[type="text"]:focus {
-      background: rgba(0, 0, 0, 0.05);
-      border-color: rgba(0, 0, 0, 0.12);
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
     }
 
     input[type="text"]::placeholder {
-      color: rgba(0, 0, 0, 0.4);
+      color: rgba(255, 255, 255, 0.3);
     }
 
     .btn {
-      padding: 12px 24px;
+      padding: 14px 28px;
       border: none;
       border-radius: 12px;
       font-family: inherit;
@@ -182,51 +163,49 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.4px;
     }
 
     .btn-generate {
-      background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
-      color: white;
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
       min-width: 140px;
-      box-shadow: 0 8px 20px rgba(0, 102, 204, 0.2);
     }
 
     .btn-generate:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.25);
       transform: translateY(-1px);
-      box-shadow: 0 12px 28px rgba(0, 102, 204, 0.3);
-    }
-
-    .btn-generate:active {
-      transform: translateY(0);
     }
 
     .btn-secondary {
-      background: rgba(0, 0, 0, 0.06);
-      color: #1d1d1f;
-      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       width: 100%;
       margin-top: 12px;
     }
 
     .btn-secondary:hover {
-      background: rgba(0, 0, 0, 0.09);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.16);
     }
 
     /* Cards container */
     .cards-container {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
-      margin-bottom: 20px;
-      min-height: 130px;
+      margin-bottom: 24px;
+      min-height: 140px;
       align-items: center;
     }
 
     .card {
-      width: 75px;
-      height: 100px;
+      width: 80px;
+      height: 110px;
       perspective: 1000px;
     }
 
@@ -234,7 +213,7 @@
       position: relative;
       width: 100%;
       height: 100%;
-      transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       transform-style: preserve-3d;
     }
 
@@ -251,13 +230,11 @@
       align-items: center;
       justify-content: center;
       border-radius: 16px;
-      font-weight: 600;
     }
 
     .card-front {
-      background: rgba(0, 0, 0, 0.04);
-      border: 1.5px solid rgba(0, 0, 0, 0.08);
-      font-size: 2em;
+      background: #1a1a1a;
+      border: 2px solid rgba(255, 255, 255, 0.1);
       position: relative;
       overflow: hidden;
     }
@@ -269,8 +246,8 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-      animation: shimmer 2s infinite;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: shimmer 2.5s infinite;
     }
 
     @keyframes shimmer {
@@ -280,30 +257,18 @@
 
     .card-back {
       transform: rotateY(180deg);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
+      background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      flex-direction: column;
-      gap: 4px;
-      padding: 8px;
-      text-align: center;
-      font-size: 0.6em;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .card-logo {
-      font-size: 1.8em;
-      line-height: 1;
-      height: 30px;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .card-name {
-      font-size: 0.75em;
-      font-weight: 600;
-      color: #1d1d1f;
-      letter-spacing: 0.2px;
+      font-size: 2.5em;
     }
 
     /* Download section */
@@ -314,15 +279,14 @@
     }
 
     .btn-download {
-      background: linear-gradient(135deg, #34c759 0%, #2db84c 100%);
-      color: white;
-      margin-bottom: 12px;
-      box-shadow: 0 8px 20px rgba(52, 199, 89, 0.2);
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 14px;
     }
 
     .btn-download:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 28px rgba(52, 199, 89, 0.3);
+      background: rgba(255, 255, 255, 0.16);
     }
 
     .share-buttons {
@@ -353,10 +317,9 @@
       to { opacity: 1; }
     }
 
-    /* Mobile responsive */
     @media (max-width: 768px) {
       .panel {
-        padding: 35px 25px;
+        padding: 40px 30px;
       }
 
       .panel h1 {
@@ -364,18 +327,18 @@
       }
 
       .card {
-        width: 60px;
-        height: 85px;
+        width: 65px;
+        height: 95px;
       }
 
       .card-logo {
-        font-size: 1.4em;
+        font-size: 2em;
       }
     }
 
     @media (max-width: 480px) {
       .panel {
-        padding: 25px 15px;
+        padding: 30px 20px;
       }
 
       .panel h1 {
@@ -383,12 +346,12 @@
       }
 
       .card {
-        width: 50px;
-        height: 75px;
+        width: 55px;
+        height: 85px;
       }
 
       .card-logo {
-        font-size: 1.2em;
+        font-size: 1.6em;
       }
 
       .input-group {
@@ -409,18 +372,18 @@
   <div class="container">
     <div class="panel">
       <h1>ChainMe</h1>
-      <div class="tagline">Build Your Crypto Portfolio</div>
+      <div class="tagline">Generate Crypto Symbol Chains</div>
 
       <div class="input-group">
-        <input type="text" id="nameInput" placeholder="Enter portfolio name..." autocomplete="off">
-        <button class="btn btn-generate" id="generateBtn">Create</button>
+        <input type="text" id="nameInput" placeholder="Enter name..." autocomplete="off">
+        <button class="btn btn-generate" id="generateBtn">Generate</button>
       </div>
 
       <div class="cards-container" id="cardsContainer"></div>
 
       <div class="download-section" id="downloadSection">
         <button class="btn btn-secondary btn-download" id="downloadBtn">
-          ↓ Download Portfolio
+          ⬇ Download Image
         </button>
         <div class="share-buttons">
           <button class="btn btn-secondary" id="shareTwitterBtn">Share</button>
@@ -432,54 +395,34 @@
   </div>
 
   <script>
-    // Crypto logos mapping with official colors
+    // Crypto alphabet mapping with official symbols and colors
     const CRYPTO_MAP = {
+      'A': { name: 'Cardano', symbol: '🔷', color: '#0033AD' },
       'B': { name: 'Bitcoin', symbol: '₿', color: '#F7931A' },
-      'S': { name: 'Solana', symbol: '◎', color: '#14F195' },
+      'C': { name: 'Cronos', symbol: '🔵', color: '#002D74' },
+      'D': { name: 'Dogecoin', symbol: 'Ð', color: '#C2A633' },
       'E': { name: 'Ethereum', symbol: 'Ξ', color: '#627EEA' },
-      'P': { name: 'Polymarket', symbol: '⬟', color: '#5294E2' },
-      'K': { name: 'Kalshi', symbol: '◆', color: '#1E90FF' },
-      'M': { name: 'MegaETH', symbol: '✦', color: '#6366F1' },
-      'F': { name: 'FTX', symbol: '❌', color: '#E74C3C', strikethrough: true }
-    };
-
-    // SVG logo creators
-    function createBTCLogo(size) {
-      return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="none"><circle cx="50" cy="50" r="45" stroke="#F7931A" stroke-width="2"/><text x="50" y="65" font-size="50" fill="#F7931A" text-anchor="middle" font-weight="bold">₿</text></svg>`;
-    }
-
-    function createSOLLogo(size) {
-      return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="none"><circle cx="50" cy="50" r="45" stroke="#14F195" stroke-width="2"/><text x="50" y="65" font-size="45" fill="#14F195" text-anchor="middle" font-weight="bold">◎</text></svg>`;
-    }
-
-    function createETHLogo(size) {
-      return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="none"><circle cx="50" cy="50" r="45" stroke="#627EEA" stroke-width="2"/><text x="50" y="65" font-size="50" fill="#627EEA" text-anchor="middle" font-weight="bold">Ξ</text></svg>`;
-    }
-
-    function createPOLYLogo(size) {
-      return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="none"><circle cx="50" cy="50" r="45" stroke="#5294E2" stroke-width="2"/><text x="50" y="65" font-size="45" fill="#5294E2" text-anchor="middle" font-weight="bold">⬟</text></svg>`;
-    }
-
-    function createKALSHILogo(size) {
-      return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="none"><circle cx="50" cy="50" r="45" stroke="#1E90FF" stroke-width="2"/><text x="50" y="65" font-size="50" fill="#1E90FF" text-anchor="middle" font-weight="bold">◆</text></svg>`;
-    }
-
-    function createMEGAETHLogo(size) {
-      return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="none"><circle cx="50" cy="50" r="45" stroke="#6366F1" stroke-width="2"/><text x="50" y="65" font-size="45" fill="#6366F1" text-anchor="middle" font-weight="bold">✦</text></svg>`;
-    }
-
-    function createFTXLogo(size) {
-      return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" fill="none"><circle cx="50" cy="50" r="45" stroke="#E74C3C" stroke-width="2"/><line x1="35" y1="35" x2="65" y2="65" stroke="#E74C3C" stroke-width="3"/><line x1="65" y1="35" x2="35" y2="65" stroke="#E74C3C" stroke-width="3"/><text x="50" y="68" font-size="45" fill="#E74C3C" text-anchor="middle" font-weight="bold">F</text></svg>`;
-    }
-
-    const logoCreators = {
-      'B': createBTCLogo,
-      'S': createSOLLogo,
-      'E': createETHLogo,
-      'P': createPOLYLogo,
-      'K': createKALSHILogo,
-      'M': createMEGAETHLogo,
-      'F': createFTXLogo
+      'F': { name: 'Filecoin', symbol: '⨎', color: '#0090FF' },
+      'G': { name: 'The Graph', symbol: '📊', color: '#6F4CBA' },
+      'H': { name: 'Hedera', symbol: 'ℏ', color: '#00B388' },
+      'I': { name: 'Internet Computer', symbol: '∞', color: '#29ABE2' },
+      'J': { name: 'Jupiter', symbol: '🪐', color: '#C4884C' },
+      'K': { name: 'Kaspa', symbol: '⬡', color: '#49EACB' },
+      'L': { name: 'Litecoin', symbol: 'Ł', color: '#BFBBBB' },
+      'M': { name: 'MakerDAO', symbol: '◈', color: '#1AAB9B' },
+      'N': { name: 'NEO', symbol: '🌿', color: '#58BF00' },
+      'O': { name: 'Optimism', symbol: '🔴', color: '#FF0420' },
+      'P': { name: 'Polygon', symbol: '⬟', color: '#8247E5' },
+      'Q': { name: 'Qtum', symbol: '◉', color: '#2895D8' },
+      'R': { name: 'Render', symbol: '🎨', color: '#FF4500' },
+      'S': { name: 'Solana', symbol: '◎', color: '#9945FF' },
+      'T': { name: 'TRON', symbol: '♦', color: '#FF0013' },
+      'U': { name: 'Uniswap', symbol: '🦄', color: '#FF007A' },
+      'V': { name: 'VeChain', symbol: '✦', color: '#15BDFF' },
+      'W': { name: 'Worldcoin', symbol: '🌍', color: '#888888' },
+      'X': { name: 'Ripple', symbol: '✕', color: '#00AAE4' },
+      'Y': { name: 'Yearn Finance', symbol: '💙', color: '#006AE3' },
+      'Z': { name: 'Zcash', symbol: 'ⓩ', color: '#F4B728' }
     };
 
     // Initialize floating symbols
@@ -493,17 +436,23 @@
         const crypto = CRYPTO_MAP[letter];
         const symbol = document.createElement('div');
         symbol.className = 'floating-symbol burst-animation';
+        symbol.textContent = crypto.symbol;
 
-        const size = 80 + Math.random() * 40;
-        symbol.style.width = size + 'px';
-        symbol.style.height = size + 'px';
+        const size = 70 + Math.random() * 50;
+        symbol.style.fontSize = size + 'px';
         symbol.style.left = centerX + 'px';
         symbol.style.top = centerY + 'px';
+        symbol.style.color = crypto.color;
+        symbol.style.display = 'flex';
+        symbol.style.alignItems = 'center';
+        symbol.style.justifyContent = 'center';
+        symbol.style.width = size + 'px';
+        symbol.style.height = size + 'px';
 
         const angle = (index / symbols.length) * Math.PI * 2;
-        const distance = 250 + Math.random() * 350;
-        const tx = Math.cos(angle) * distance + (Math.random() - 0.5) * 150;
-        const ty = Math.sin(angle) * distance + (Math.random() - 0.5) * 150;
+        const distance = 280 + Math.random() * 400;
+        const tx = Math.cos(angle) * distance + (Math.random() - 0.5) * 200;
+        const ty = Math.sin(angle) * distance + (Math.random() - 0.5) * 200;
 
         symbol.style.setProperty('--tx', tx + 'px');
         symbol.style.setProperty('--ty', ty + 'px');
@@ -511,26 +460,13 @@
         const delay = Math.random() * 2;
         symbol.style.animationDelay = delay + 's';
 
-        // Create SVG logo if available
-        const logoCreator = logoCreators[letter];
-        if (logoCreator) {
-          symbol.innerHTML = logoCreator(size);
-        } else {
-          symbol.textContent = crypto.symbol;
-          symbol.style.fontSize = (size * 0.6) + 'px';
-          symbol.style.color = crypto.color;
-          symbol.style.display = 'flex';
-          symbol.style.alignItems = 'center';
-          symbol.style.justifyContent = 'center';
-        }
-
         container.appendChild(symbol);
 
         setTimeout(() => {
           symbol.classList.remove('burst-animation');
           symbol.classList.add('floating');
           symbol.style.animationDelay = delay + 's';
-        }, 1400);
+        }, 1600);
       });
     }
 
@@ -544,14 +480,14 @@
       osc.connect(gain);
       gain.connect(audioContext.destination);
 
-      osc.frequency.setValueAtTime(600, now);
-      osc.frequency.exponentialRampToValueAtTime(300, now + 0.08);
+      osc.frequency.setValueAtTime(650, now);
+      osc.frequency.exponentialRampToValueAtTime(350, now + 0.12);
 
-      gain.gain.setValueAtTime(0.08, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
 
       osc.start(now);
-      osc.stop(now + 0.08);
+      osc.stop(now + 0.12);
     }
 
     // Create and flip card
@@ -566,7 +502,6 @@
           <div class="card-front"></div>
           <div class="card-back">
             <div class="card-logo">${crypto.symbol}</div>
-            <div class="card-name">${crypto.name}</div>
           </div>
         </div>
       `;
@@ -584,20 +519,20 @@
     // Create confetti
     function createConfetti() {
       const colors = Object.values(CRYPTO_MAP).map(c => c.color);
-      const confettiCount = 25;
+      const confettiCount = 30;
 
       for (let i = 0; i < confettiCount; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
         confetti.style.left = Math.random() * window.innerWidth + 'px';
         confetti.style.top = '-10px';
-        confetti.style.width = '8px';
-        confetti.style.height = '8px';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
         confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
 
         document.body.appendChild(confetti);
 
-        const duration = 2 + Math.random() * 1;
+        const duration = 2.5 + Math.random() * 1;
         const animation = confetti.animate([
           { transform: 'translateY(0) rotateZ(0deg)', opacity: 1 },
           { transform: `translateY(${window.innerHeight + 20}px) rotateZ(${Math.random() * 360}deg)`, opacity: 0 }
@@ -613,41 +548,42 @@
     // Download image
     function downloadImage(name) {
       const letters = name.toUpperCase().split('');
-      const cardWidth = 110;
-      const cardHeight = 150;
-      const padding = 60;
-      const canvasWidth = Math.max(1200, letters.length * cardWidth + padding * 2);
-      const canvasHeight = 500;
+      const cardWidth = 120;
+      const cardHeight = 160;
+      const padding = 80;
+      const canvasWidth = Math.max(1400, letters.length * cardWidth + padding * 2);
+      const canvasHeight = 600;
 
       const canvas = document.createElement('canvas');
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
       const ctx = canvas.getContext('2d');
 
-      // Apple GlassOS background
+      // Gray/Black background
       const bgGradient = ctx.createLinearGradient(0, 0, canvasWidth, canvasHeight);
-      bgGradient.addColorStop(0, '#f5f5f7');
-      bgGradient.addColorStop(0.5, '#ffffff');
-      bgGradient.addColorStop(1, '#ececf1');
+      bgGradient.addColorStop(0, '#0a0a0a');
+      bgGradient.addColorStop(0.5, '#1a1a1a');
+      bgGradient.addColorStop(1, '#0f0f0f');
       ctx.fillStyle = bgGradient;
       ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
       // Subtle grid
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.03)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
       ctx.lineWidth = 1;
-      for (let i = 0; i < canvasWidth; i += 50) {
+      for (let i = 0; i < canvasWidth; i += 60) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
         ctx.lineTo(i, canvasHeight);
         ctx.stroke();
       }
+      for (let i = 0; i < canvasHeight; i += 60) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvasWidth, i);
+        ctx.stroke();
+      }
 
-      // Watermark
-      ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-      ctx.fillText('ChainMe', 40, 50);
-
-      // Draw cards
+      // Draw cards with symbols only
       const startX = (canvasWidth - letters.length * cardWidth) / 2;
       const startY = (canvasHeight - cardHeight) / 2;
 
@@ -658,48 +594,27 @@
         const x = startX + index * cardWidth;
         const y = startY;
 
-        // GlassOS card background
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.fillRect(x + 8, y + 8, cardWidth - 16, cardHeight);
+        // Glass card background
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.fillRect(x + 10, y + 10, cardWidth - 20, cardHeight);
 
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.08)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
         ctx.lineWidth = 1.5;
-        ctx.strokeRect(x + 8, y + 8, cardWidth - 16, cardHeight);
+        ctx.strokeRect(x + 10, y + 10, cardWidth - 20, cardHeight);
 
-        // Border radius via clipping
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(x + 8, y + 8, cardWidth - 16, cardHeight, 16);
-        ctx.clip();
-
-        // Card styling
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.fillRect(x + 8, y + 8, cardWidth - 16, cardHeight);
-
-        ctx.restore();
-
-        // Symbol
-        ctx.font = 'bold 60px system-ui';
+        // Symbol only - LARGE and centered
+        ctx.font = 'bold 90px system-ui';
         ctx.fillStyle = crypto.color;
         ctx.textAlign = 'center';
-        ctx.fillText(crypto.symbol, x + cardWidth / 2, y + 60);
-
-        // Name
-        ctx.font = '600 14px -apple-system, BlinkMacSystemFont, sans-serif';
-        ctx.fillStyle = '#1d1d1f';
-        ctx.fillText(crypto.name, x + cardWidth / 2, y + 120);
-
-        // Letter
-        ctx.font = 'bold 24px system-ui';
-        ctx.fillStyle = crypto.color;
-        ctx.fillText(letter, x + cardWidth / 2, y + 145);
+        ctx.textBaseline = 'middle';
+        ctx.fillText(crypto.symbol, x + cardWidth / 2, y + cardHeight / 2);
       });
 
-      // Bottom watermark
-      ctx.font = '12px -apple-system, BlinkMacSystemFont, sans-serif';
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      // Watermark
+      ctx.font = '14px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
       ctx.textAlign = 'right';
-      ctx.fillText('chainme.vercel.app', canvasWidth - 40, canvasHeight - 20);
+      ctx.fillText('chainme.vercel.app', canvasWidth - 40, canvasHeight - 25);
 
       // Download
       const link = document.createElement('a');
@@ -712,7 +627,7 @@
     document.getElementById('generateBtn').addEventListener('click', function() {
       const name = document.getElementById('nameInput').value.trim();
       if (!name || name.length === 0) {
-        alert('Please enter a portfolio name');
+        alert('Please enter a name');
         return;
       }
 
@@ -724,11 +639,11 @@
       const letters = name.toUpperCase().split('');
       letters.forEach((letter, index) => {
         if (CRYPTO_MAP[letter]) {
-          createAndFlipCard(letter, index * 130);
+          createAndFlipCard(letter, index * 150);
         }
       });
 
-      const lastFlipTime = (letters.length - 1) * 130 + 500;
+      const lastFlipTime = (letters.filter(l => CRYPTO_MAP[l]).length - 1) * 150 + 600;
       setTimeout(() => {
         document.getElementById('downloadSection').style.opacity = '1';
         document.getElementById('downloadSection').style.pointerEvents = 'auto';
@@ -752,7 +667,7 @@
     document.getElementById('shareTwitterBtn').addEventListener('click', function() {
       const name = document.getElementById('nameInput').value.trim();
       if (name) {
-        const text = encodeURIComponent(`I just created a crypto portfolio with ChainMe: ${name} 🚀 Try it → chainme.vercel.app`);
+        const text = encodeURIComponent(`I just created "${name}" with ChainMe 🪙 Try it: chainme.vercel.app`);
         window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
       }
     });
@@ -760,9 +675,9 @@
     document.getElementById('shareCopyBtn').addEventListener('click', function() {
       const name = document.getElementById('nameInput').value.trim();
       if (name) {
-        const link = `${window.location.href}?portfolio=${encodeURIComponent(name)}`;
+        const link = `${window.location.href}?chain=${encodeURIComponent(name)}`;
         navigator.clipboard.writeText(link).then(() => {
-          alert('Portfolio link copied!');
+          alert('Link copied!');
         });
       }
     });
@@ -771,21 +686,22 @@
       document.getElementById('cardsContainer').innerHTML = '';
       document.getElementById('downloadSection').style.opacity = '0';
       document.getElementById('downloadSection').style.pointerEvents = 'none';
+      document.getElementById('nameInput').value = '';
       document.getElementById('nameInput').focus();
     });
 
-    function loadPortfolioFromURL() {
+    function loadChainFromURL() {
       const params = new URLSearchParams(window.location.search);
-      const portfolio = params.get('portfolio');
-      if (portfolio) {
-        document.getElementById('nameInput').value = portfolio;
+      const chain = params.get('chain');
+      if (chain) {
+        document.getElementById('nameInput').value = chain;
         document.getElementById('generateBtn').click();
       }
     }
 
     window.addEventListener('load', () => {
       initializeFloatingSymbols();
-      loadPortfolioFromURL();
+      loadChainFromURL();
     });
   </script>
 </body>
